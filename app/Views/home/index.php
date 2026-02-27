@@ -1,8 +1,14 @@
 <?php use App\Core\View; ?>
+<div class="tabs">
+  <a class="tab active" href="<?= View::url('/') ?>">Обзор</a>
+  <a class="tab" href="<?= View::url('/catalog') ?>">Модели</a>
+  <a class="tab" href="<?= View::url('/favorites') ?>">Избранное</a>
+</div>
+
 <section class="hero">
-  <h1>Премиальные диски для премиальных авто</h1>
-  <p>Люксовые, спортивные, кованые и литые модели в строгом стиле BLACKFORGE.</p>
-  <a class="btn" href="<?= View::url('/catalog') ?>">Перейти в каталог</a>
+  <h1>Минимализм. Статус. BLACKFORGE.</h1>
+  <p>Премиальные диски в строгой черно‑золотой эстетике для современных автомобилей.</p>
+  <a class="btn" href="<?= View::url('/catalog') ?>">Открыть каталог</a>
 </section>
 <section>
   <h2>Популярные модели</h2>
@@ -12,7 +18,7 @@
         <h3><?= View::e($p['name']) ?></h3>
         <p>R<?= View::e((string)$p['diameter']) ?> • <?= View::e($p['material']) ?></p>
         <p class="price"><?= number_format((float)$p['price'], 0, '.', ' ') ?> ₽</p>
-        <a href="<?= View::url('/product/' . rawurlencode((string) $p['slug'])) ?>">Подробнее</a>
+        <a class="card-link" href="<?= View::url('/product/' . rawurlencode((string) $p['slug'])) ?>">Подробнее</a>
       </article>
     <?php endforeach; ?>
   </div>

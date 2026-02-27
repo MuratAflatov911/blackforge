@@ -1,4 +1,9 @@
 <?php use App\Core\View; ?>
+<div class="tabs">
+  <a class="tab active" href="<?= View::url('/profile') ?>">Профиль</a>
+  <a class="tab" href="<?= View::url('/favorites') ?>">Избранное</a>
+  <a class="tab" href="<?= View::url('/cart') ?>">Корзина</a>
+</div>
 <h1>Личный кабинет</h1>
 <p>Email: <?= View::e($user['email']) ?></p>
 <h2>История заказов</h2>

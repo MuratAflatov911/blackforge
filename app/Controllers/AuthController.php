@@ -14,7 +14,14 @@ final class AuthController extends Controller
 {
     public function loginForm(): void
     {
-        $this->view('auth/login', ['meta' => ['title' => 'Вход']]);
+        $a = random_int(1, 9);
+        $b = random_int(1, 9);
+        $_SESSION['captcha_login_answer'] = $a + $b;
+
+        $this->view('auth/login', [
+            'captchaQuestion' => "{$a} + {$b}",
+            'meta' => ['title' => 'Вход'],
+        ]);
     }
 
     public function login(): void
@@ -25,6 +32,13 @@ final class AuthController extends Controller
         }
         $email = trim((string) ($_POST['email'] ?? ''));
         $password = (string) ($_POST['password'] ?? '');
+        $captcha = (int) ($_POST['captcha'] ?? -1);
+
+        if ($captcha !== (int) ($_SESSION['captcha_login_answer'] ?? -999)) {
+            $_SESSION['flash'] = 'Неверная CAPTCHA';
+            $this->redirect('/login');
+        }
+
         $user = (new User())->findByEmail($email);
 
         if (!$user || !password_verify($password, $user['password_hash'])) {
@@ -38,9 +52,12 @@ final class AuthController extends Controller
 
     public function registerForm(): void
     {
-        $_SESSION['captcha_answer'] = random_int(2, 9) + random_int(1, 8);
+        $a = random_int(1, 9);
+        $b = random_int(1, 9);
+        $_SESSION['captcha_register_answer'] = $a + $b;
+
         $this->view('auth/register', [
-            'captcha' => $_SESSION['captcha_answer'],
+            'captchaQuestion' => "{$a} + {$b}",
             'meta' => ['title' => 'Регистрация'],
         ]);
     }
@@ -55,7 +72,7 @@ final class AuthController extends Controller
         $password = (string) ($_POST['password'] ?? '');
         $captcha = (int) ($_POST['captcha'] ?? -1);
 
-        if (!Validator::email($email) || !Validator::minLength($password, 8) || $captcha !== (int) ($_SESSION['captcha_answer'] ?? -999)) {
+        if (!Validator::email($email) || !Validator::minLength($password, 8) || $captcha !== (int) ($_SESSION['captcha_register_answer'] ?? -999)) {
             $_SESSION['flash'] = 'Ошибка валидации (email/пароль/CAPTCHA)';
             $this->redirect('/register');
         }

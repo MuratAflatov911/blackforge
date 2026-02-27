@@ -1,5 +1,9 @@
 <?php use App\Core\Csrf; use App\Core\View; ?>
-<article class="product">
+<div class="tabs">
+  <a class="tab" href="<?= View::url('/catalog') ?>">Каталог</a>
+  <a class="tab active" href="#"><?= View::e($product['name']) ?></a>
+</div>
+<article class="product card">
   <h1><?= View::e($product['name']) ?></h1>
   <div class="gallery">
     <?php foreach (($product['images'] ?: [['image_url' => '/assets/images/placeholder.svg']]) as $img): ?>
