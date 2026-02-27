@@ -22,12 +22,14 @@ final class User extends BaseModel
         return $stmt->fetch() ?: null;
     }
 
-    public function create(string $email, string $passwordHash): void
+    public function create(string $email, string $passwordHash, string $firstName, string $lastName, string $phone): void
     {
-        $stmt = $this->db->prepare('INSERT INTO users (role_id, email, password_hash, email_verified) VALUES (3, :email, :password_hash, 0)');
+        $stmt = $this->db->prepare('INSERT INTO users (role_id, email, password_hash, full_name, phone, email_verified) VALUES (3, :email, :password_hash, :full_name, :phone, 0)');
         $stmt->execute([
             'email' => $email,
             'password_hash' => $passwordHash,
+            'full_name' => trim($firstName . ' ' . $lastName),
+            'phone' => $phone,
         ]);
     }
 
@@ -51,10 +53,16 @@ final class User extends BaseModel
         return $stmt->fetchAll();
     }
 
-    public function updateProfile(int $id, string $fullName, string $phone): void
+    public function updateProfile(int $id, string $fullName, string $phone, string $address, ?string $avatarUrl): void
     {
-        $stmt = $this->db->prepare('UPDATE users SET full_name=:full_name, phone=:phone WHERE id=:id');
-        $stmt->execute(['id' => $id, 'full_name' => $fullName, 'phone' => $phone]);
+        $stmt = $this->db->prepare('UPDATE users SET full_name=:full_name, phone=:phone, address=:address, avatar_url=:avatar_url WHERE id=:id');
+        $stmt->execute([
+            'id' => $id,
+            'full_name' => $fullName,
+            'phone' => $phone,
+            'address' => $address,
+            'avatar_url' => $avatarUrl,
+        ]);
     }
 
     public function changePassword(int $id, string $hash): void

@@ -8,10 +8,17 @@
 <div class="grid">
   <section class="card">
     <h2>Редактирование профиля</h2>
-    <form method="post" action="<?= View::url('/profile/update') ?>" class="auth-form">
+    <?php if (!empty($user['avatar_url'])): ?>
+      <img class="avatar-preview" src="<?= View::e($user['avatar_url']) ?>" alt="avatar">
+    <?php endif; ?>
+    <form method="post" action="<?= View::url('/profile/update') ?>" class="auth-form" enctype="multipart/form-data">
       <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
-      <input type="text" name="full_name" placeholder="Имя" value="<?= View::e((string)($user['full_name'] ?? '')) ?>">
+      <input type="text" name="full_name" placeholder="Имя и фамилия" value="<?= View::e((string)($user['full_name'] ?? '')) ?>">
       <input type="text" name="phone" placeholder="Телефон" value="<?= View::e((string)($user['phone'] ?? '')) ?>">
+      <input type="text" name="address" placeholder="Адрес проживания" value="<?= View::e((string)($user['address'] ?? '')) ?>">
+      <input type="text" name="avatar_url" placeholder="URL аватара" value="<?= View::e((string)($user['avatar_url'] ?? '')) ?>">
+      <label>Или загрузите аватар с устройства</label>
+      <input type="file" name="avatar_file" accept="image/*">
       <button class="btn">Сохранить</button>
     </form>
   </section>

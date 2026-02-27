@@ -5,14 +5,21 @@
   <a class="tab" href="<?= View::url('/about') ?>">О нас</a>
 </div>
 
-<section class="hero card">
-  <h1>BLACKFORGE — премиальные диски для автомобилей премиум‑класса</h1>
-  <p>Современный дизайн, инженерная точность и строгая черно‑золотая эстетика.</p>
-  <a class="btn" href="<?= View::url('/catalog') ?>">Перейти в каталог</a>
+<section class="home-section hero-block card">
+  <div>
+    <h1>BLACKFORGE — премиальные диски для автомобилей премиум‑класса</h1>
+    <p>Современный дизайн, инженерная точность и строгая черно‑золотая эстетика.</p>
+    <a class="btn" href="<?= View::url('/catalog') ?>">Перейти в каталог</a>
+  </div>
+  <div class="hero-stats">
+    <div><strong>5000+</strong><span>дисков в каталоге</span></div>
+    <div><strong>24/7</strong><span>поддержка клиентов</span></div>
+    <div><strong>12 мес.</strong><span>официальная гарантия</span></div>
+  </div>
 </section>
 
-<section class="card">
-  <h2>Фильтр по автомобилю</h2>
+<section class="home-section card">
+  <h2>Подбор дисков по автомобилю</h2>
   <form class="filters" method="get" action="<?= View::url('/catalog') ?>">
     <select name="brand">
       <option value="">Марка</option>
@@ -26,8 +33,8 @@
   </form>
 </section>
 
-<section>
-  <h2>Популярные диски</h2>
+<section class="home-section">
+  <div class="section-head"><h2>Популярные диски</h2><a class="card-link" href="<?= View::url('/catalog?sort=popular') ?>">Смотреть все</a></div>
   <div class="grid">
     <?php foreach ($popularProducts as $p): ?>
       <article class="card">
@@ -40,8 +47,8 @@
   </div>
 </section>
 
-<section>
-  <h2>Новинки</h2>
+<section class="home-section">
+  <div class="section-head"><h2>Новинки</h2><a class="card-link" href="<?= View::url('/catalog?sort=new') ?>">Все новинки</a></div>
   <div class="grid">
     <?php foreach ($newProducts as $p): ?>
       <article class="card">
@@ -53,13 +60,13 @@
   </div>
 </section>
 
-<section class="grid">
+<section class="home-section grid">
   <article class="card"><h3>Качество</h3><p>Оригинальные диски и строгий контроль качества каждой партии.</p></article>
   <article class="card"><h3>Гарантия</h3><p>12 месяцев гарантии и программа быстрой замены при заводском браке.</p></article>
   <article class="card"><h3>Доставка</h3><p>Бережная упаковка и быстрая доставка по всей России.</p></article>
 </section>
 
-<section class="grid">
+<section class="home-section grid">
   <form method="post" action="<?= View::url('/newsletter') ?>" class="card auth-form">
     <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
     <h3>Подписка на новости</h3>

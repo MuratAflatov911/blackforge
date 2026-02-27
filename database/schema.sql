@@ -11,6 +11,8 @@ CREATE TABLE users (
   password_hash VARCHAR(255) NOT NULL,
   full_name VARCHAR(120) NULL,
   phone VARCHAR(30) NULL,
+  address VARCHAR(255) NULL,
+  avatar_url VARCHAR(255) NULL,
   email_verified TINYINT(1) NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (role_id) REFERENCES roles(id)

@@ -14,12 +14,13 @@ final class AuthController extends Controller
 {
     public function loginForm(): void
     {
-        $a = random_int(1, 9);
-        $b = random_int(1, 9);
-        $_SESSION['captcha_login_answer'] = $a + $b;
+        $a = random_int(2, 9);
+        $b = random_int(2, 9);
+        $c = random_int(1, 5);
+        $_SESSION['captcha_login_answer'] = ($a * $b) - $c;
 
         $this->view('auth/login', [
-            'captchaQuestion' => "{$a} + {$b}",
+            'captchaQuestion' => "({$a} × {$b}) - {$c}",
             'meta' => ['title' => 'Вход'],
         ]);
     }
@@ -52,12 +53,13 @@ final class AuthController extends Controller
 
     public function registerForm(): void
     {
-        $a = random_int(1, 9);
-        $b = random_int(1, 9);
-        $_SESSION['captcha_register_answer'] = $a + $b;
+        $a = random_int(3, 12);
+        $b = random_int(2, 9);
+        $c = random_int(1, 4);
+        $_SESSION['captcha_register_answer'] = ($a + $b) * $c;
 
         $this->view('auth/register', [
-            'captchaQuestion' => "{$a} + {$b}",
+            'captchaQuestion' => "({$a} + {$b}) × {$c}",
             'meta' => ['title' => 'Регистрация'],
         ]);
     }
@@ -68,12 +70,24 @@ final class AuthController extends Controller
             http_response_code(419);
             return;
         }
+        $firstName = trim((string) ($_POST['first_name'] ?? ''));
+        $lastName = trim((string) ($_POST['last_name'] ?? ''));
+        $phone = trim((string) ($_POST['phone'] ?? ''));
         $email = trim((string) ($_POST['email'] ?? ''));
         $password = (string) ($_POST['password'] ?? '');
+        $confirm = (string) ($_POST['password_confirm'] ?? '');
         $captcha = (int) ($_POST['captcha'] ?? -1);
 
-        if (!Validator::email($email) || !Validator::minLength($password, 8) || $captcha !== (int) ($_SESSION['captcha_register_answer'] ?? -999)) {
-            $_SESSION['flash'] = 'Ошибка валидации (email/пароль/CAPTCHA)';
+        $phoneValid = (bool) preg_match('/^[+0-9()\-\s]{8,20}$/', $phone);
+        if (!Validator::email($email)
+            || !Validator::minLength($password, 8)
+            || $password !== $confirm
+            || !Validator::minLength($firstName, 2)
+            || !Validator::minLength($lastName, 2)
+            || !$phoneValid
+            || $captcha !== (int) ($_SESSION['captcha_register_answer'] ?? -999)
+        ) {
+            $_SESSION['flash'] = 'Ошибка валидации регистрации. Проверьте поля формы и CAPTCHA.';
             $this->redirect('/register');
         }
 
@@ -83,12 +97,10 @@ final class AuthController extends Controller
             $this->redirect('/register');
         }
 
-        $userModel->create($email, password_hash($password, PASSWORD_DEFAULT));
+        $userModel->create($email, password_hash($password, PASSWORD_DEFAULT), $firstName, $lastName, $phone);
         $_SESSION['flash'] = 'Регистрация успешна. Подтверждение email: демо-режим.';
         $this->redirect('/login');
     }
-
-
 
     public function forgotForm(): void
     {

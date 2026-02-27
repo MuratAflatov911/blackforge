@@ -7,7 +7,6 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Csrf;
-use App\Models\Product;
 use App\Models\User;
 
 final class ProfileController extends Controller
@@ -39,7 +38,25 @@ final class ProfileController extends Controller
             $this->redirect('/login');
         }
 
-        (new User())->updateProfile((int) $user['id'], trim((string) ($_POST['full_name'] ?? '')), trim((string) ($_POST['phone'] ?? '')));
+        $fullName = trim((string) ($_POST['full_name'] ?? ''));
+        $phone = trim((string) ($_POST['phone'] ?? ''));
+        $address = trim((string) ($_POST['address'] ?? ''));
+        $avatarUrl = trim((string) ($_POST['avatar_url'] ?? ''));
+
+        if (!empty($_FILES['avatar_file']['tmp_name']) && is_uploaded_file($_FILES['avatar_file']['tmp_name'])) {
+            $uploadDir = __DIR__ . '/../../public/uploads';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $ext = pathinfo((string) $_FILES['avatar_file']['name'], PATHINFO_EXTENSION) ?: 'jpg';
+            $fileName = 'avatar_' . (int) $user['id'] . '_' . time() . '.' . preg_replace('/[^a-z0-9]/i', '', $ext);
+            $target = $uploadDir . '/' . $fileName;
+            if (move_uploaded_file($_FILES['avatar_file']['tmp_name'], $target)) {
+                $avatarUrl = '/uploads/' . $fileName;
+            }
+        }
+
+        (new User())->updateProfile((int) $user['id'], $fullName, $phone, $address, $avatarUrl !== '' ? $avatarUrl : ($user['avatar_url'] ?? null));
         $_SESSION['flash'] = 'Профиль обновлён';
         $this->redirect('/profile');
     }

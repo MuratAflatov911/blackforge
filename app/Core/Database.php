@@ -39,7 +39,7 @@ final class Database
     private static function initSqlite(PDO $pdo): void
     {
         $pdo->exec('CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY, name TEXT, slug TEXT UNIQUE)');
-        $pdo->exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, role_id INTEGER, email TEXT UNIQUE, password_hash TEXT, full_name TEXT NULL, phone TEXT NULL, email_verified INTEGER DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
+        $pdo->exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, role_id INTEGER, email TEXT UNIQUE, password_hash TEXT, full_name TEXT NULL, phone TEXT NULL, address TEXT NULL, avatar_url TEXT NULL, email_verified INTEGER DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, slug TEXT UNIQUE)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS manufacturers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, country TEXT)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, category_id INTEGER, manufacturer_id INTEGER, name TEXT, slug TEXT UNIQUE, description TEXT, diameter INTEGER, pcd TEXT, width REAL, offset_et INTEGER, material TEXT, type TEXT, color TEXT, price REAL, stock INTEGER DEFAULT 0, popularity INTEGER DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
@@ -48,6 +48,9 @@ final class Database
         $pdo->exec('CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER, product_id INTEGER, quantity INTEGER, unit_price REAL)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, product_id INTEGER, rating INTEGER, comment TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS admin_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, action TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
+
+        try { $pdo->exec('ALTER TABLE users ADD COLUMN address TEXT NULL'); } catch (PDOException) {}
+        try { $pdo->exec('ALTER TABLE users ADD COLUMN avatar_url TEXT NULL'); } catch (PDOException) {}
 
         $exists = (int) $pdo->query('SELECT COUNT(*) AS cnt FROM products')->fetch()['cnt'];
         if ($exists === 0) {
