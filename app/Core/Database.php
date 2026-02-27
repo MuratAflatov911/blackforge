@@ -50,12 +50,18 @@ final class Database
         $exists = (int) $pdo->query('SELECT COUNT(*) AS cnt FROM products')->fetch()['cnt'];
         if ($exists === 0) {
             $pdo->exec("INSERT INTO roles(id,name,slug) VALUES (1,'Администратор','admin'), (2,'Пользователь','user')");
+            $pdo->exec("INSERT INTO users(role_id,email,password_hash,email_verified) VALUES (1,'admin@blackforge.local','$2y$12$8hC6kJxLCDLxeIhVbHjeOuLnGHwq7eBYAFIu0OQpSq8np4Fyx0Pdy',1)");
             $pdo->exec("INSERT INTO categories(name,slug) VALUES ('Литые диски','litye'), ('Кованые диски','kovanye')");
             $pdo->exec("INSERT INTO manufacturers(name,country) VALUES ('BLACKFORGE Atelier','Germany'), ('Aurum Wheels','Italy')");
             $pdo->exec("INSERT INTO products(category_id, manufacturer_id, name, slug, description, diameter, pcd, width, offset_et, material, type, color, price, stock, popularity) VALUES
                 (1,1,'BLACKFORGE Obsidian R19','blackforge-obsidian-r19','Спортивный дизайн в графитовом цвете.',19,'5x112',8.5,35,'литые','спортивные','graphite',125000,12,95),
                 (2,2,'BLACKFORGE Royale R21','blackforge-royale-r21','Люксовая кованая серия в золоте.',21,'5x120',9.5,40,'кованые','люкс','gold',249000,4,99)");
             $pdo->exec("INSERT INTO product_images(product_id, image_url, source, sort_order) VALUES (1,'/assets/images/placeholder.svg','url',1),(2,'/assets/images/placeholder.svg','url',1)");
+        }
+
+        $adminExists = (int) $pdo->query("SELECT COUNT(*) AS cnt FROM users WHERE role_id = 1")->fetch()['cnt'];
+        if ($adminExists === 0) {
+            $pdo->exec("INSERT INTO users(role_id,email,password_hash,email_verified) VALUES (1,'admin@blackforge.local','$2y$12$8hC6kJxLCDLxeIhVbHjeOuLnGHwq7eBYAFIu0OQpSq8np4Fyx0Pdy',1)");
         }
     }
 }

@@ -1,6 +1,9 @@
 INSERT INTO categories(name, slug) VALUES ('Литые диски', 'litye'), ('Кованые диски', 'kovanye');
 INSERT INTO manufacturers(name, country) VALUES ('BLACKFORGE Atelier', 'Germany'), ('Aurum Wheels', 'Italy');
 
+INSERT INTO users(role_id, email, password_hash, email_verified)
+VALUES (1, 'admin@blackforge.local', '$2y$12$8hC6kJxLCDLxeIhVbHjeOuLnGHwq7eBYAFIu0OQpSq8np4Fyx0Pdy', 1);
+
 INSERT INTO products(category_id, manufacturer_id, name, slug, description, diameter, pcd, width, offset_et, material, type, color, price, stock, popularity)
 VALUES
 (1,1,'BLACKFORGE Obsidian R19','blackforge-obsidian-r19','Спортивный дизайн в графитовом цвете.',19,'5x112',8.5,35,'литые','спортивные','graphite',125000,12,95),
