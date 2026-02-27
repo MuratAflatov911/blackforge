@@ -39,17 +39,19 @@ final class Database
     private static function initSqlite(PDO $pdo): void
     {
         $pdo->exec('CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY, name TEXT, slug TEXT UNIQUE)');
-        $pdo->exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, role_id INTEGER, email TEXT UNIQUE, password_hash TEXT, email_verified INTEGER DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
+        $pdo->exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, role_id INTEGER, email TEXT UNIQUE, password_hash TEXT, full_name TEXT NULL, phone TEXT NULL, email_verified INTEGER DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, slug TEXT UNIQUE)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS manufacturers (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, country TEXT)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, category_id INTEGER, manufacturer_id INTEGER, name TEXT, slug TEXT UNIQUE, description TEXT, diameter INTEGER, pcd TEXT, width REAL, offset_et INTEGER, material TEXT, type TEXT, color TEXT, price REAL, stock INTEGER DEFAULT 0, popularity INTEGER DEFAULT 0, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS product_images (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER, image_url TEXT, source TEXT, sort_order INTEGER DEFAULT 0)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NULL, customer_email TEXT, total_amount REAL, status TEXT DEFAULT "new", promo_code TEXT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
         $pdo->exec('CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER, product_id INTEGER, quantity INTEGER, unit_price REAL)');
+        $pdo->exec('CREATE TABLE IF NOT EXISTS reviews (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, product_id INTEGER, rating INTEGER, comment TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
+        $pdo->exec('CREATE TABLE IF NOT EXISTS admin_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, action TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)');
 
         $exists = (int) $pdo->query('SELECT COUNT(*) AS cnt FROM products')->fetch()['cnt'];
         if ($exists === 0) {
-            $pdo->exec("INSERT INTO roles(id,name,slug) VALUES (1,'Администратор','admin'), (2,'Пользователь','user')");
+            $pdo->exec("INSERT INTO roles(id,name,slug) VALUES (1,'Super Admin','super-admin'), (2,'Manager','manager'), (3,'Пользователь','user')");
             $pdo->exec("INSERT INTO users(role_id,email,password_hash,email_verified) VALUES (1,'admin@blackforge.local','$2y$12$8hC6kJxLCDLxeIhVbHjeOuLnGHwq7eBYAFIu0OQpSq8np4Fyx0Pdy',1)");
             $pdo->exec("INSERT INTO categories(name,slug) VALUES ('Литые диски','litye'), ('Кованые диски','kovanye')");
             $pdo->exec("INSERT INTO manufacturers(name,country) VALUES ('BLACKFORGE Atelier','Germany'), ('Aurum Wheels','Italy')");

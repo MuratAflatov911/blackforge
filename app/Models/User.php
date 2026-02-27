@@ -24,7 +24,7 @@ final class User extends BaseModel
 
     public function create(string $email, string $passwordHash): void
     {
-        $stmt = $this->db->prepare('INSERT INTO users (role_id, email, password_hash, email_verified) VALUES (2, :email, :password_hash, 0)');
+        $stmt = $this->db->prepare('INSERT INTO users (role_id, email, password_hash, email_verified) VALUES (3, :email, :password_hash, 0)');
         $stmt->execute([
             'email' => $email,
             'password_hash' => $passwordHash,
@@ -33,7 +33,7 @@ final class User extends BaseModel
 
     public function all(): array
     {
-        return $this->db->query('SELECT u.id, u.email, u.email_verified, r.name AS role_name FROM users u JOIN roles r ON r.id=u.role_id ORDER BY u.created_at DESC')->fetchAll();
+        return $this->db->query('SELECT u.id, u.email, u.full_name, u.email_verified, r.name AS role_name FROM users u JOIN roles r ON r.id=u.role_id ORDER BY u.created_at DESC')->fetchAll();
     }
 
     public function orderHistory(int $userId): array
@@ -42,5 +42,24 @@ final class User extends BaseModel
         $stmt->execute(['user_id' => $userId]);
 
         return $stmt->fetchAll();
+    }
+
+    public function orderItems(int $orderId): array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM order_items WHERE order_id=:order_id');
+        $stmt->execute(['order_id' => $orderId]);
+        return $stmt->fetchAll();
+    }
+
+    public function updateProfile(int $id, string $fullName, string $phone): void
+    {
+        $stmt = $this->db->prepare('UPDATE users SET full_name=:full_name, phone=:phone WHERE id=:id');
+        $stmt->execute(['id' => $id, 'full_name' => $fullName, 'phone' => $phone]);
+    }
+
+    public function changePassword(int $id, string $hash): void
+    {
+        $stmt = $this->db->prepare('UPDATE users SET password_hash=:hash WHERE id=:id');
+        $stmt->execute(['id' => $id, 'hash' => $hash]);
     }
 }

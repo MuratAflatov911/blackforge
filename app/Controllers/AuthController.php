@@ -88,6 +88,57 @@ final class AuthController extends Controller
         $this->redirect('/login');
     }
 
+
+
+    public function forgotForm(): void
+    {
+        $this->view('auth/forgot', ['meta' => ['title' => 'Восстановление пароля']]);
+    }
+
+    public function sendReset(): void
+    {
+        if (!Csrf::check($_POST['_csrf'] ?? null)) {
+            http_response_code(419);
+            return;
+        }
+        $_SESSION['reset_email'] = trim((string) ($_POST['email'] ?? ''));
+        $_SESSION['flash'] = 'Ссылка для восстановления отправлена на email (демо).';
+        $this->redirect('/reset-password');
+    }
+
+    public function resetForm(): void
+    {
+        $this->view('auth/reset', ['meta' => ['title' => 'Новый пароль']]);
+    }
+
+    public function resetPassword(): void
+    {
+        if (!Csrf::check($_POST['_csrf'] ?? null)) {
+            http_response_code(419);
+            return;
+        }
+        $email = (string) ($_SESSION['reset_email'] ?? '');
+        $new = (string) ($_POST['password'] ?? '');
+        if ($email === '' || !Validator::minLength($new, 8)) {
+            $_SESSION['flash'] = 'Ошибка восстановления пароля';
+            $this->redirect('/reset-password');
+        }
+
+        $userModel = new User();
+        $user = $userModel->findByEmail($email);
+        if ($user) {
+            $userModel->changePassword((int) $user['id'], password_hash($new, PASSWORD_DEFAULT));
+        }
+        $_SESSION['flash'] = 'Пароль изменён. Войдите в систему.';
+        $this->redirect('/login');
+    }
+
+    public function verifyEmail(): void
+    {
+        $_SESSION['flash'] = 'Email подтвержден (демо-режим).';
+        $this->redirect('/login');
+    }
+
     public function logout(): void
     {
         Auth::logout();

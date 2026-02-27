@@ -10,6 +10,7 @@ $mainTabs = [
     '/catalog' => 'Каталог',
     '/favorites' => 'Избранное',
     '/cart' => 'Корзина',
+    '/about' => 'О нас',
 ];
 ?>
 <!doctype html>
@@ -48,7 +49,7 @@ $mainTabs = [
     <?php require $contentView; ?>
 </main>
 
-<footer class="footer">© <?= date('Y') ?> BLACKFORGE • Premium Wheels</footer>
+<footer class="footer">© <?= date('Y') ?> BLACKFORGE • <a class="card-link" href="<?= View::url('/delivery') ?>">Доставка</a> • <a class="card-link" href="<?= View::url('/warranty') ?>">Гарантия</a> • <a class="card-link" href="<?= View::url('/privacy') ?>">Политика</a></footer>
 </div>
 </body>
 </html>

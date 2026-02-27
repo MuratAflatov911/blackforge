@@ -30,6 +30,6 @@ final class Auth
     public static function checkAdmin(): bool
     {
         $user = self::user();
-        return $user !== null && $user['role_slug'] === 'admin';
+        return $user !== null && in_array($user['role_slug'], ['super-admin', 'manager', 'admin'], true);
     }
 }

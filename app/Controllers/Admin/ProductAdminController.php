@@ -23,8 +23,39 @@ final class ProductAdminController extends BaseAdminController
             http_response_code(419);
             return;
         }
-        // В учебном примере CRUD сокращён до демо-страницы списка.
-        $_SESSION['flash'] = 'Создание товара вынесено в заготовку CRUD.';
+
+        $name = trim((string) ($_POST['name'] ?? ''));
+        $slug = trim((string) ($_POST['slug'] ?? ''));
+        $price = (float) ($_POST['price'] ?? 0);
+        $stock = (int) ($_POST['stock'] ?? 0);
+        $imageUrl = trim((string) ($_POST['image_url'] ?? ''));
+
+        if ($name === '' || $slug === '' || $price <= 0) {
+            $_SESSION['flash'] = 'Заполните обязательные поля товара.';
+            $this->redirect('/admin/products');
+        }
+
+        $db = \App\Core\Database::connection();
+        $stmt = $db->prepare('INSERT INTO products (category_id, manufacturer_id, name, slug, description, diameter, pcd, width, offset_et, material, type, color, price, stock, popularity) VALUES (1,1,:name,:slug,:description,19,:pcd,8.5,35,:material,:type,:color,:price,:stock,1)');
+        $stmt->execute([
+            'name' => $name,
+            'slug' => $slug,
+            'description' => 'Товар добавлен из админ-панели',
+            'pcd' => '5x112',
+            'material' => 'литые',
+            'type' => 'премиальные',
+            'color' => 'black',
+            'price' => $price,
+            'stock' => $stock,
+        ]);
+        $productId = (int) $db->lastInsertId();
+
+        if ($imageUrl !== '') {
+            $imgStmt = $db->prepare('INSERT INTO product_images (product_id, image_url, source, sort_order) VALUES (:product_id, :image_url, :source, 1)');
+            $imgStmt->execute(['product_id' => $productId, 'image_url' => $imageUrl, 'source' => 'url']);
+        }
+
+        $_SESSION['flash'] = 'Товар создан';
         $this->redirect('/admin/products');
     }
 }

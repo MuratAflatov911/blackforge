@@ -64,7 +64,9 @@ CREATE TABLE promo_codes (
   code VARCHAR(50) NOT NULL UNIQUE,
   discount_percent DECIMAL(5,2) NOT NULL,
   active TINYINT(1) NOT NULL DEFAULT 1,
-  expires_at DATETIME NULL
+  expires_at DATETIME NULL,
+  usage_limit INT NULL,
+  used_count INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE orders (
@@ -72,7 +74,7 @@ CREATE TABLE orders (
   user_id INT NULL,
   customer_email VARCHAR(150) NOT NULL,
   total_amount DECIMAL(12,2) NOT NULL,
-  status ENUM('new','paid','shipped','completed','cancelled') NOT NULL DEFAULT 'new',
+  status ENUM('new','processing','shipped','delivered','cancelled') NOT NULL DEFAULT 'new',
   promo_code VARCHAR(50) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id)
@@ -116,9 +118,11 @@ CREATE TABLE reviews (
   product_id INT NOT NULL,
   rating TINYINT NOT NULL,
   comment TEXT,
+  status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  admin_reply TEXT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
-INSERT INTO roles(name, slug) VALUES ('Администратор','admin'), ('Пользователь','user');
+INSERT INTO roles(name, slug) VALUES ('Super Admin','super-admin'), ('Manager','manager'), ('Пользователь','user');

@@ -11,4 +11,5 @@
   <label>CAPTCHA: решите <?= View::e($captchaQuestion ?? '1 + 1') ?></label>
   <input type="number" name="captcha" required>
   <button class="btn">Зарегистрироваться</button>
+  <a class="card-link" href="<?= View::url('/verify-email') ?>">Подтвердить email (демо)</a>
 </form>

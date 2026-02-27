@@ -11,7 +11,9 @@ abstract class BaseAdminController extends Controller
 {
     protected function guard(): void
     {
-        if (!Auth::checkAdmin()) {
+        $user = Auth::user();
+        $allowed = ['admin', 'manager', 'super-admin'];
+        if (!$user || !in_array($user['role_slug'], $allowed, true)) {
             http_response_code(403);
             echo 'Доступ запрещён';
             exit;
