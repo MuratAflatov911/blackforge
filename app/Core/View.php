@@ -18,4 +18,9 @@ final class View
     {
         return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
     }
+
+    public static function url(string $path = '/'): string
+    {
+        return Url::to($path);
+    }
 }

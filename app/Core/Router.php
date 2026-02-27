@@ -16,9 +16,18 @@ final class Router
         $this->routes[] = compact('method', 'path', 'handler');
     }
 
-    public function dispatch(string $method, string $uri): void
+    public function dispatch(string $method, string $uri, string $basePath = ''): void
     {
         $requestPath = parse_url($uri, PHP_URL_PATH) ?: '/';
+        $basePath = rtrim($basePath, '/');
+
+        if ($basePath !== '' && str_starts_with($requestPath, $basePath)) {
+            $requestPath = substr($requestPath, strlen($basePath)) ?: '/';
+        }
+
+        if ($requestPath === '') {
+            $requestPath = '/';
+        }
 
         foreach ($this->routes as $route) {
             if ($route['method'] !== $method) {

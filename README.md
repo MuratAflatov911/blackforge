@@ -13,6 +13,7 @@
 
 ## Запуск
 1. Скопируйте `config/config.example.php` в `config/config.php` и заполните параметры.
+   - Если проект запускается из подпапки XAMPP (`http://localhost/blackforge`), задайте `app.base_path = '/blackforge'`.
 2. Импортируйте `database/schema.sql` в MySQL.
 3. Запустите локальный сервер:
    ```bash

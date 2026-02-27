@@ -17,13 +17,13 @@
   </ul>
   <p class="price"><?= number_format((float)$product['price'], 0, '.', ' ') ?> ₽</p>
 
-  <form method="post" action="/cart/add" class="inline">
+  <form method="post" action="<?= View::url('/cart/add') ?>" class="inline">
     <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
     <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
     <input type="number" name="quantity" min="1" value="1">
     <button class="btn">Добавить в корзину</button>
   </form>
-  <form method="post" action="/favorites/toggle" class="inline">
+  <form method="post" action="<?= View::url('/favorites/toggle') ?>" class="inline">
     <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
     <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
     <button class="btn ghost">В избранное</button>

@@ -1,6 +1,6 @@
 <?php use App\Core\Csrf; use App\Core\View; ?>
 <h1>Товары (CRUD)</h1>
-<form method="post" action="/admin/products">
+<form method="post" action="<?= View::url('/admin/products') ?>">
   <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
   <button class="btn">Создать товар (демо)</button>
 </form>

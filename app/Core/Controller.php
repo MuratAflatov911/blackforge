@@ -13,7 +13,7 @@ abstract class Controller
 
     protected function redirect(string $path): void
     {
-        header('Location: ' . $path);
+        header('Location: ' . Url::to($path));
         exit;
     }
 }

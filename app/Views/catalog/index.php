@@ -14,7 +14,7 @@
       <h3><?= View::e($p['name']) ?></h3>
       <p><?= View::e($p['manufacturer_name']) ?> • <?= View::e($p['type']) ?></p>
       <p class="price"><?= number_format((float)$p['price'], 0, '.', ' ') ?> ₽</p>
-      <a href="/product/<?= View::e($p['slug']) ?>">Карточка товара</a>
+      <a href="<?= View::url('/product/' . rawurlencode((string) $p['slug'])) ?>">Карточка товара</a>
     </article>
   <?php endforeach; ?>
 </div>

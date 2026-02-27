@@ -4,6 +4,7 @@ return [
     'app' => [
         'name' => 'BLACKFORGE',
         'base_url' => 'http://localhost:8080',
+        'base_path' => '', // например: '/blackforge' для XAMPP подпапки
         'env' => 'local',
     ],
     'db' => [

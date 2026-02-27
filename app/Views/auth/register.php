@@ -1,6 +1,6 @@
-<?php use App\Core\Csrf; ?>
+<?php use App\Core\Csrf; use App\Core\View; ?>
 <h1>Регистрация</h1>
-<form method="post" action="/register" class="auth-form">
+<form method="post" action="<?= View::url('/register') ?>" class="auth-form">
   <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
   <input type="email" name="email" placeholder="Email" required>
   <input type="password" name="password" placeholder="Пароль (мин. 8)" required>

@@ -1,6 +1,6 @@
 <?php use App\Core\Csrf; use App\Core\View; ?>
 <h1>Корзина</h1>
-<form method="post" action="/cart/update">
+<form method="post" action="<?= View::url('/cart/update') ?>">
   <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
   <?php foreach ($cart['items'] as $item): ?>
     <div class="row">
@@ -13,7 +13,7 @@
   <button class="btn">Обновить корзину</button>
 </form>
 <p class="price">Итого: <?= number_format((float)$cart['total'], 0, '.', ' ') ?> ₽</p>
-<form method="post" action="/checkout" class="checkout">
+<form method="post" action="<?= View::url('/checkout') ?>" class="checkout">
   <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
   <input type="email" name="email" required placeholder="Email для заказа">
   <input type="text" name="promo" placeholder="Промокод">

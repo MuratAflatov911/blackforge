@@ -2,7 +2,7 @@
 <section class="hero">
   <h1>Премиальные диски для премиальных авто</h1>
   <p>Люксовые, спортивные, кованые и литые модели в строгом стиле BLACKFORGE.</p>
-  <a class="btn" href="/catalog">Перейти в каталог</a>
+  <a class="btn" href="<?= View::url('/catalog') ?>">Перейти в каталог</a>
 </section>
 <section>
   <h2>Популярные модели</h2>
@@ -12,7 +12,7 @@
         <h3><?= View::e($p['name']) ?></h3>
         <p>R<?= View::e((string)$p['diameter']) ?> • <?= View::e($p['material']) ?></p>
         <p class="price"><?= number_format((float)$p['price'], 0, '.', ' ') ?> ₽</p>
-        <a href="/product/<?= View::e($p['slug']) ?>">Подробнее</a>
+        <a href="<?= View::url('/product/' . rawurlencode((string) $p['slug'])) ?>">Подробнее</a>
       </article>
     <?php endforeach; ?>
   </div>
