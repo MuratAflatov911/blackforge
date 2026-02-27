@@ -20,6 +20,12 @@
    ```
 4. Откройте `http://localhost:8080`.
 
+
+### Запуск в XAMPP (Windows)
+1. Поместите проект в `htdocs/blackforge`.
+2. В браузере открывайте `http://localhost/blackforge/` (корневой `index.php` перенаправит на front controller).
+3. Убедитесь, что в Apache включен `mod_rewrite` и разрешен `.htaccess` (`AllowOverride All`).
+
 ## Структура
 - `app/Core` — ядро MVC и безопасность.
 - `app/Controllers` — пользовательские и админ-контроллеры.
