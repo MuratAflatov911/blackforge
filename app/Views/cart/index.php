@@ -1,0 +1,31 @@
+<?php use App\Core\Csrf; use App\Core\View; ?>
+<div class="tabs">
+  <a class="tab active" href="<?= View::url('/cart') ?>">Корзина</a>
+  <a class="tab" href="<?= View::url('/favorites') ?>">Избранное</a>
+  <a class="tab" href="<?= View::url('/compare') ?>">Сравнение</a>
+</div>
+<h1>Корзина</h1>
+<form method="post" action="<?= View::url('/cart/update') ?>" class="card">
+  <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
+  <?php foreach ($cart['items'] as $item): ?>
+    <div class="row">
+      <strong><?= View::e($item['name']) ?></strong>
+      <span><?= number_format((float)$item['price'], 0, '.', ' ') ?> ₽</span>
+      <input type="number" min="0" name="qty[<?= (int)$item['id'] ?>]" value="<?= (int)$item['quantity'] ?>">
+      <span><?= number_format((float)$item['line'], 0, '.', ' ') ?> ₽</span>
+    </div>
+  <?php endforeach; ?>
+  <button class="btn">Обновить корзину</button>
+</form>
+<p class="price">Итого: <?= number_format((float)$cart['total'], 0, '.', ' ') ?> ₽</p>
+<form method="post" action="<?= View::url('/checkout') ?>" class="checkout card">
+  <input type="hidden" name="_csrf" value="<?= Csrf::token() ?>">
+  <input type="text" name="name" required placeholder="Имя">
+  <input type="email" name="email" required placeholder="Email">
+  <input type="text" name="phone" required placeholder="Телефон">
+  <input type="text" name="address" required placeholder="Адрес доставки">
+  <select name="delivery"><option>Курьер</option><option>Самовывоз</option><option>Транспортная компания</option></select>
+  <select name="payment"><option>Карта</option><option>Наличные</option><option>Безналичный счёт</option></select>
+  <input type="text" name="promo" placeholder="Промокод">
+  <button class="btn">Подтвердить заказ</button>
+</form>
